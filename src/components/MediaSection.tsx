@@ -6,7 +6,7 @@ import { Movie, TVShow } from '../types/tmdb';
 interface MediaSectionProps {
   title: string;
   items: (Movie | TVShow)[];
-  type: 'movie' | 'tv';
+  type: 'movie' | 'tv' | 'mixed';
   onPlay: (id: number, type: 'movie' | 'tv') => void;
   onDetails: (item: Movie | TVShow, type: 'movie' | 'tv') => void;
 }

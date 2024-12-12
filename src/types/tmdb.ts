@@ -48,3 +48,13 @@ export interface TVShow {
   original_language?: string;
   seasons?: Season[];
 }
+
+export interface WatchHistoryItem {
+  id: number;
+  type: 'movie' | 'tv';
+  title: string;
+  poster_path: string;
+  timestamp: number;
+  season?: number;
+  episode?: number;
+}

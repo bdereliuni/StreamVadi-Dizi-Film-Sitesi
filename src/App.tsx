@@ -17,6 +17,7 @@ import { VideoModal } from './components/VideoModal';
 import { DetailsModal } from './components/DetailsModal';
 import { Movie, TVShow } from './types/tmdb';
 import { useDebounce } from './hooks/useDebounce';
+import { useWatchHistory } from './hooks/useWatchHistory';
 
 function App() {
   const [videoModal, setVideoModal] = useState<{
@@ -63,8 +64,49 @@ function App() {
     staleTime: 1000 * 60 * 5,
   });
 
+  const { watchHistory, addToHistory } = useWatchHistory();
+
+  const { data: watchHistoryDetails, isLoading: isLoadingHistory } = useQuery(
+    ['watchHistoryDetails', watchHistory],
+    async () => {
+      if (!watchHistory.length) return [];
+      
+      const details = await Promise.all(
+        watchHistory.map(async (item) => {
+          const details = await getMediaDetails(item.id, item.type);
+          return {
+            ...details,
+            type: item.type,
+            season: item.season,
+            episode: item.episode,
+          };
+        })
+      );
+      return details;
+    },
+    {
+      enabled: watchHistory.length > 0,
+      staleTime: 1000 * 60 * 5, // 5 dakika
+    }
+  );
+
   const handlePlay = (id: number, type: 'movie' | 'tv', season?: number, episode?: number) => {
     setVideoModal({ isOpen: true, mediaId: id, type, season, episode });
+
+    const item = type === 'movie'
+      ? trendingMovies?.find(m => m.id === id) || popularMovies?.find(m => m.id === id) || topRatedMovies?.find(m => m.id === id)
+      : trendingSeries?.find(s => s.id === id) || popularSeries?.find(s => s.id === id) || topRatedSeries?.find(s => s.id === id);
+
+    if (item) {
+      addToHistory({
+        id,
+        type,
+        title: 'title' in item ? item.title : item.name,
+        poster_path: item.poster_path,
+        timestamp: Date.now(),
+        ...(type === 'tv' && { season, episode }),
+      });
+    }
   };
 
   const handleDetails = async (item: Movie | TVShow, type: 'movie' | 'tv') => {
@@ -211,6 +253,37 @@ function App() {
                   </div>
                 </div>
               </section>
+            )}
+
+            {/* İzleme Geçmişi */}
+            {watchHistory.length > 0 && (
+              <div className="relative bg-[#0A0F1C] z-10">
+                <div className="space-y-12 py-12 px-8 max-w-[1800px] mx-auto">
+                  {isLoadingHistory ? (
+                    <div className="flex items-center justify-center py-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-2 border-indigo-500 border-t-transparent"></div>
+                    </div>
+                  ) : watchHistoryDetails && (
+                    <MediaSection
+                      title="İzlemeye Devam Edin"
+                      items={watchHistoryDetails}
+                      type="mixed"
+                      onPlay={(id) => {
+                        const historyItem = watchHistory.find(item => item.id === id);
+                        if (historyItem) {
+                          handlePlay(id, historyItem.type, historyItem.season, historyItem.episode);
+                        }
+                      }}
+                      onDetails={async (item) => {
+                        const historyItem = watchHistory.find(h => h.id === item.id);
+                        if (historyItem) {
+                          setDetailsModal({ isOpen: true, item, type: historyItem.type });
+                        }
+                      }}
+                    />
+                  )}
+                </div>
+              </div>
             )}
 
             {/* Kategoriler */}
