@@ -4,7 +4,7 @@ SinemaVadi, en popüler filmleri ve dizileri keşfetmenizi sağlayan modern bir 
 
 ## Ekran Görüntüsü
 
-![SinemaVadi Ekran Görüntüsü](screenshot.png)
+![SinemaVadi Ekran Görüntüsü](screenshot1.png)
 ![SinemaVadi Ekran Görüntüsü2](screenshot2.png)
 
 ## Özellikler
