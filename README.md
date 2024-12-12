@@ -1,6 +1,7 @@
 # SinemaVadi
 
 SinemaVadi, en popüler filmleri ve dizileri keşfetmenizi sağlayan modern bir web uygulamasıdır. Kullanıcılar, trend olan içerikleri görebilir, popüler filmleri ve dizileri izleyebilir ve en iyi puan alan yapımları keşfedebilir. Public API key entegrelidir. Yine de kendiniz .env dosyası oluşturup TMDB API key ekleyebilirsiniz.
+Live Demo: https://stream-vadi-dizi-film-sitesi.vercel.app
 
 ## Ekran Görüntüsü
 
