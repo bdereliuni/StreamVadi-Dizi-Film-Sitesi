@@ -21,8 +21,8 @@ export const VideoModal: React.FC<VideoModalProps> = ({
   if (!isOpen) return null;
 
   const embedUrl = type === 'movie'
-    ? `https://embed.su/embed/movie/${mediaId}`
-    : `https://embed.su/embed/tv/${mediaId}/${season}/${episode}`;
+    ? `https://vidlink.pro/movie/${mediaId}`
+    : `https://vidlink.pro/tv/${mediaId}/${season}/${episode}`;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center">
